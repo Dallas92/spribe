@@ -1,5 +1,7 @@
 package com.example.spribe.controller;
 
+import com.example.spribe.exception.ConflictException;
+import com.example.spribe.exception.NotFoundException;
 import com.example.spribe.model.api.CreatePaymentRequest;
 import com.example.spribe.service.PaymentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,5 +43,33 @@ class PaymentControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1));
+    }
+
+    @Test
+    void processPayment_WhenBookingNotFound() throws Exception {
+        CreatePaymentRequest request = new CreatePaymentRequest();
+        request.setBookingId(1L);
+        request.setUserId(10L);
+
+        when(paymentService.create(any())).thenThrow(new NotFoundException("booking not found"));
+
+        mockMvc.perform(post("/api/payments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void processPayment_WhenForbidden() throws Exception {
+        CreatePaymentRequest request = new CreatePaymentRequest();
+        request.setBookingId(1L);
+        request.setUserId(10L);
+
+        when(paymentService.create(any())).thenThrow(new ConflictException("user not allowed to perform this operation"));
+
+        mockMvc.perform(post("/api/payments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isConflict());
     }
 }
