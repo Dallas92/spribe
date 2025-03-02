@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class UnitService {
+
+    private static final BigDecimal SYSTEM_MARKUP = BigDecimal.valueOf(0.15);
 
     private final UnitRepository unitRepository;
     private final UnitCacheService unitCacheService;
@@ -47,7 +50,7 @@ public class UnitService {
         unit.setAccommodationType(request.getAccommodationType());
         unit.setFloor(request.getFloor());
         unit.setDescription(request.getDescription());
-        unit.setCost(request.getCost());
+        unit.setCost(request.getCost().add(request.getCost().multiply(SYSTEM_MARKUP)));
         unitRepository.save(unit);
 
         log.info("{} created", unit);

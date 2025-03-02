@@ -61,7 +61,7 @@ class UnitServiceTest {
         UnitEntity savedUnit = unitRepository.findById(unitId).orElseThrow();
         assertEquals(request.getFloor(), savedUnit.getFloor());
         assertEquals(request.getNumberOfRooms(), savedUnit.getNumberOfRooms());
-        assertEquals(request.getCost(), savedUnit.getCost());
+        assertEquals(request.getCost().add(request.getCost().multiply(BigDecimal.valueOf(0.15))), savedUnit.getCost());
         assertEquals(request.getDescription(), savedUnit.getDescription());
         assertEquals(request.getAccommodationType(), savedUnit.getAccommodationType());
     }
