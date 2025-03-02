@@ -23,7 +23,7 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<CreateBookingResponse> create(@RequestBody CreateBookingRequest request) {
         var id = bookingService.create(request);
-        return ResponseEntity.status(HttpStatus.OK).body(new CreateBookingResponse(id));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreateBookingResponse(id));
     }
 
     @PostMapping("/{id}/cancel")

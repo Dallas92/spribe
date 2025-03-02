@@ -32,6 +32,6 @@ public class PaymentEntity {
     @JoinColumn(name = "booking_id")
     private BookingEntity booking;
     private BigDecimal amount;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }

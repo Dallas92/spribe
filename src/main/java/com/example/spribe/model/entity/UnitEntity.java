@@ -15,6 +15,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class UnitEntity {
     private Integer floor;
     private BigDecimal cost;
     private String description;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
     @OneToMany(mappedBy = "unit", fetch = FetchType.LAZY)
     private List<BookingEntity> bookings = new ArrayList<>();
 }
