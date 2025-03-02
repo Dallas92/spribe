@@ -2,15 +2,13 @@ package com.example.spribe.controller;
 
 import com.example.spribe.model.api.CreateUnitRequest;
 import com.example.spribe.model.api.CreateUnitResponse;
+import com.example.spribe.model.api.GetUnitStatsResponse;
 import com.example.spribe.model.api.UnitDto;
 import com.example.spribe.model.enums.AccommodationType;
 import com.example.spribe.service.UnitService;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/units")
@@ -73,8 +69,8 @@ public class UnitController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<Set<Long>> getStats() {
+    public ResponseEntity<GetUnitStatsResponse> getStats() {
         var items = unitService.getStats();
-        return ResponseEntity.status(HttpStatus.OK).body(items);
+        return ResponseEntity.status(HttpStatus.OK).body(new GetUnitStatsResponse(items));
     }
 }

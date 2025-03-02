@@ -21,7 +21,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
+import static org.hamcrest.Matchers.hasItems;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -84,8 +86,8 @@ class UnitControllerTest {
 
         // Act & Assert
         mockMvc.perform(get("/api/units")
-                        .param("dateFrom", LocalDate.of(2025,1,1).toString())
-                        .param("dateTo", LocalDate.of(2025,12,1).toString())
+                        .param("dateFrom", LocalDate.of(2025, 1, 1).toString())
+                        .param("dateTo", LocalDate.of(2025, 12, 1).toString())
                         .param("page", "0")
                         .param("size", "10")
                         .param("sort", "cost,asc"))
@@ -119,5 +121,14 @@ class UnitControllerTest {
                 .andExpect(jsonPath("$.number").value(0))
                 .andExpect(jsonPath("$.numberOfElements").value(2))
                 .andExpect(jsonPath("$.empty").value(false));
+    }
+
+    @Test
+    void get_units_stats() throws Exception {
+        when(unitService.getStats()).thenReturn(Set.of(1L, 2L));
+
+        mockMvc.perform(get("/api/units/stats"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ids", hasItems(1, 2)));
     }
 }
